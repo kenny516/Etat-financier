@@ -7,9 +7,7 @@ import {
     LayoutDashboard,
     FileSpreadsheet,
     PlusCircle,
-    BarChart3,
-    Settings,
-    HelpCircle,
+    BarChart3
 } from "lucide-react";
 
 const navigation = [
@@ -32,19 +30,6 @@ const navigation = [
         name: "Analyses",
         href: "/analyses",
         icon: BarChart3
-    },
-];
-
-const secondaryNavigation = [
-    {
-        name: "Paramètres",
-        href: "/parametres",
-        icon: Settings
-    },
-    {
-        name: "Aide",
-        href: "/aide",
-        icon: HelpCircle
     },
 ];
 
@@ -84,22 +69,7 @@ export function Sidebar() {
                         );
                     })}
                 </nav>
-                <div className="border-t border-gray-200 pt-4">
-                    <nav className="space-y-1 px-2">
-                        {secondaryNavigation.map((item) => (
-                            <Link
-                                key={item.name}
-                                href={item.href}
-                                className="group flex items-center px-2 py-2 text-sm font-medium text-gray-600 rounded-md hover:bg-gray-50 hover:text-gray-900"
-                            >
-                                <item.icon
-                                    className="mr-3 h-5 w-5 flex-shrink-0 text-gray-400 group-hover:text-gray-500"
-                                />
-                                {item.name}
-                            </Link>
-                        ))}
-                    </nav>
-                </div>
+               
             </div>
         </div>
     );

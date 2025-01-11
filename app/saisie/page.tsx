@@ -72,7 +72,7 @@ export default function SaisiePage() {
 
     return (
         <div className="container mx-auto py-8">
-            <h1 className="text-3xl font-bold mb-8">Saisie des Données Financières</h1>
+            <h1 className="text-3xl font-bold mb-8 ml-6">Saisie des Données Financières</h1>
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
                     <FinancialDataForm form={form} companies={companies} rubriqueTypes={rubriqueTypes} />
