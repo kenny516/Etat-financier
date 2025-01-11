@@ -30,16 +30,16 @@ type FormData = z.infer<typeof formSchema>;
 
 interface FinancialDataSelectionFormProps {
   onSubmit: (data: FormData) => void;
-  companies: Array<Societe> ;
+  companies: Array<Societe>;
   years: number[];
-	company : Societe;
-	onCompanyChange = (company : Societe) => void;
+  onCompanyChange: (company: Societe) => void;
 }
 
 export function FinancialDataSelectionForm({
   onSubmit,
   companies,
   years,
+  onCompanyChange,
 }: FinancialDataSelectionFormProps) {
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
@@ -66,8 +66,19 @@ export function FinancialDataSelectionForm({
               render={({ field }) => (
                 <FormItem>
                   <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
+                    onValueChange={(selectedValue) => {
+                      const selectedCompany = companies.find(
+                        (company) => company.id.toString() === selectedValue
+                      );
+
+                      if (selectedCompany) {
+                        onCompanyChange(selectedCompany); // Ensure it’s called only if a valid company is found
+                      } else {
+                        console.error("Selected company not found!");
+                      }
+
+                      field.onChange(selectedValue); // Update the form value
+                    }}
                   >
                     <FormControl>
                       <SelectTrigger>
@@ -76,7 +87,10 @@ export function FinancialDataSelectionForm({
                     </FormControl>
                     <SelectContent>
                       {companies.map((company) => (
-                        <SelectItem key={company.id} value={company.id.toString()}>
+                        <SelectItem
+                          key={company.id}
+                          value={company.id.toString()}
+                        >
                           {company.nom}
                         </SelectItem>
                       ))}
@@ -111,7 +125,6 @@ export function FinancialDataSelectionForm({
                   <FormMessage />
                 </FormItem>
               )}
-
             />
             <Button type="submit">Afficher le bilan</Button>
           </form>
@@ -119,4 +132,4 @@ export function FinancialDataSelectionForm({
       </CardContent>
     </Card>
   );
-};
+}
