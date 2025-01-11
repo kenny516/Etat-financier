@@ -1,61 +1,73 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import * as z from "zod";
-import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { FinancialDataForm } from "@/components/financial-data-form";
-
-const currentYear = new Date().getFullYear();
-
-export const financialSchema = z.object({
-    company: z.string().min(2, "Le nom de l'entreprise est requis"),
-    year: z.number().min(currentYear - 1).max(currentYear),
-    // Actifs
-    assets: z.array(z.object({
-        label: z.string().min(1, "Le libellé est requis"),
-        amount: z.number().min(0, "Le montant doit être positif"),
-        type: z.enum(["cash", "receivable", "inventory", "fixed"])
-    })),
-    // Passifs
-    liabilities: z.array(z.object({
-        label: z.string().min(1, "Le libellé est requis"),
-        amount: z.number().min(0, "Le montant doit être positif"),
-        type: z.enum(["payable", "shortTerm", "longTerm", "equity"])
-    })),
-    // Compte de résultat
-    revenue: z.number().min(0),
-    expenses: z.number().min(0),
-});
-
-export type FinancialFormData = z.infer<typeof financialSchema>;
+import { financialSchema, FinancialFormData } from "@/type/types_financial-data";
+import axios from "axios";
+import { apiUrl, Societe, TypeRubrique } from "@/type/type";
 
 export default function SaisiePage() {
+    const [companies, setCompanies] = useState<Societe[]>([]);
+    const [rubriqueTypes, setRubriqueTypes] = useState<TypeRubrique[]>([]);
+
+    useEffect(() => {
+        // Fetch companies and rubrique types
+        const fetchData = async () => {
+            try {
+                const [companiesResponse, typesResponse] = await Promise.all([
+                    axios.get(apiUrl + '/societes'),
+                    axios.get(apiUrl + '/types-rubrique')
+                ]);
+                setCompanies(companiesResponse.data);
+                setRubriqueTypes(typesResponse.data);
+            } catch (error) {
+                console.error("Error fetching data:", error);
+            }
+        };
+
+        fetchData();
+    }, []);
+
     const form = useForm<FinancialFormData>({
         resolver: zodResolver(financialSchema),
         defaultValues: {
-            year: currentYear,
-            assets: [
-                { label: "Compte bancaire", amount: 0, type: "cash" },
-                { label: "Caisse", amount: 0, type: "cash" },
-                { label: "Créances clients", amount: 0, type: "receivable" },
-                { label: "Stock marchandises", amount: 0, type: "inventory" },
-                { label: "Matériel", amount: 0, type: "fixed" },
-            ],
-            liabilities: [
-                { label: "Dettes fournisseurs", amount: 0, type: "payable" },
-                { label: "Découvert bancaire", amount: 0, type: "shortTerm" },
-                { label: "Emprunt bancaire", amount: 0, type: "longTerm" },
-                { label: "Capital social", amount: 0, type: "equity" },
-            ],
-            revenue: 0,
-            expenses: 0,
+            annee: new Date().getFullYear(),
+            societe: 0,
+            bilan: {
+                actifs: [],
+                passifs: []
+            },
+            resultat: {
+                produits: [],
+                charges: []
+            }
         },
     });
 
-    function onSubmit(data: FinancialFormData) {
+    async function onSubmit(data: FinancialFormData) {
         console.log(data);
+        try {
+            const response = await fetch(apiUrl + '/bilan', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            });
+            if (response.ok) {
+                console.log("Data submitted successfully");
+                // Handle success (e.g., show a success message, redirect, etc.)
+            } else {
+                console.error("Error submitting data");
+                // Handle error (e.g., show an error message)
+            }
+        } catch (error) {
+            console.error("Error submitting data:", error);
+            // Handle error (e.g., show an error message)
+        }
     }
 
     return (
@@ -63,10 +75,7 @@ export default function SaisiePage() {
             <h1 className="text-3xl font-bold mb-8">Saisie des Données Financières</h1>
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-                    <FinancialDataForm form={form} />
-                    <Button type="submit" size="lg">
-                        Générer lanalyse
-                    </Button>
+                    <FinancialDataForm form={form} companies={companies} rubriqueTypes={rubriqueTypes} />
                 </form>
             </Form>
         </div>
