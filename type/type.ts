@@ -1,3 +1,6 @@
+export const apiUrl = "http://localhost:8080";
+
+
 export interface Categorie {
     idCategorie: number;
     nom: string;
