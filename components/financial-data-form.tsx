@@ -13,15 +13,16 @@ import { Button } from "@/components/ui/button";
 import { Plus, Trash2, DollarSign, Building, CalendarDays } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { FinancialFormData } from "@/type/types_financial-data";
-import { Societe, TypeRubrique } from "@/type/type";
+import { Societe, TypeRubrique, Rubrique } from "@/type/type";
 
 interface FinancialDataFormProps {
     form: UseFormReturn<FinancialFormData>;
     companies: Societe[];
     rubriqueTypes: TypeRubrique[];
+    rubriques: Rubrique[];
 }
 
-export function FinancialDataForm({ form, companies, rubriqueTypes }: FinancialDataFormProps) {
+export function FinancialDataForm({ form, companies, rubriqueTypes, rubriques }: FinancialDataFormProps) {
     const { fields: actifFields, append: appendActif, remove: removeActif } =
         useFieldArray({ control: form.control, name: "bilan.actifs" });
 
@@ -49,13 +50,52 @@ export function FinancialDataForm({ form, companies, rubriqueTypes }: FinancialD
             <div key={field.id} className="flex flex-col md:flex-row gap-4 items-start bg-gray-50 p-4 rounded-lg">
                 <FormField
                     control={form.control}
-                    name={`${name}.${index}.libelle`}
+                    name={`${name}.${index}.idTypeRubrique`}
                     render={({ field }) => (
                         <FormItem className="flex-1">
-                            <FormLabel>Libellé</FormLabel>
-                            <FormControl>
-                                <Input {...field} className="border-2" />
-                            </FormControl>
+                            <FormLabel>Type de Rubrique</FormLabel>
+                            <Select onValueChange={(value) => field.onChange(parseInt(value))} value={field.value?.toString()}>
+                                <FormControl>
+                                    <SelectTrigger>
+                                        <SelectValue placeholder="Sélectionnez un type" />
+                                    </SelectTrigger>
+                                </FormControl>
+                                <SelectContent>
+                                    {rubriqueTypes
+                                        .filter((type) => type.idCategorie === idCategorie)
+                                        .map((type) => (
+                                            <SelectItem key={type.idTypeRubrique} value={type.idTypeRubrique.toString()}>
+                                                {type.nom}
+                                            </SelectItem>
+                                        ))}
+                                </SelectContent>
+                            </Select>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+                <FormField
+                    control={form.control}
+                    name={`${name}.${index}.idRubrique`}
+                    render={({ field }) => (
+                        <FormItem className="flex-1">
+                            <FormLabel>Rubrique</FormLabel>
+                            <Select onValueChange={(value) => field.onChange(parseInt(value))} value={field.value?.toString()}>
+                                <FormControl>
+                                    <SelectTrigger>
+                                        <SelectValue placeholder="Sélectionnez une rubrique" />
+                                    </SelectTrigger>
+                                </FormControl>
+                                <SelectContent>
+                                    {rubriques
+                                        .filter((rubrique) => rubrique.idTypeRubrique === form.watch(`${name}.${index}.idTypeRubrique`))
+                                        .map((rubrique) => (
+                                            <SelectItem key={rubrique.idRubrique} value={rubrique.idRubrique.toString()}>
+                                                {rubrique.libelle}
+                                            </SelectItem>
+                                        ))}
+                                </SelectContent>
+                            </Select>
                             <FormMessage />
                         </FormItem>
                     )}
@@ -80,32 +120,6 @@ export function FinancialDataForm({ form, companies, rubriqueTypes }: FinancialD
                                     />
                                 </div>
                             </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
-                <FormField
-                    control={form.control}
-                    name={`${name}.${index}.idTypeRubrique`}
-                    render={({ field }) => (
-                        <FormItem className="flex-1">
-                            <FormLabel>Type</FormLabel>
-                            <Select onValueChange={(value) => field.onChange(parseInt(value))} value={field.value?.toString()}>
-                                <FormControl>
-                                    <SelectTrigger>
-                                        <SelectValue placeholder="Sélectionnez un type" />
-                                    </SelectTrigger>
-                                </FormControl>
-                                <SelectContent>
-                                    {rubriqueTypes
-                                        .filter((type) => type.idCategorie === idCategorie)
-                                        .map((type) => (
-                                            <SelectItem key={type.idTypeRubrique} value={type.idTypeRubrique.toString()}>
-                                                {type.nom}
-                                            </SelectItem>
-                                        ))}
-                                </SelectContent>
-                            </Select>
                             <FormMessage />
                         </FormItem>
                     )}
@@ -197,7 +211,7 @@ export function FinancialDataForm({ form, companies, rubriqueTypes }: FinancialD
                             <CardTitle className="text-2xl text-green-800">Actifs</CardTitle>
                             <Button
                                 type="button"
-                                onClick={() => appendActif({ libelle: "", montant: 0, idTypeRubrique: 0 })}
+                                onClick={() => appendActif({ idRubrique: 0, montant: 0, idTypeRubrique: 0 })}
                                 className="bg-green-500 hover:bg-green-600 text-white"
                             >
                                 <Plus className="h-5 w-5 mr-2" />
@@ -205,7 +219,7 @@ export function FinancialDataForm({ form, companies, rubriqueTypes }: FinancialD
                             </Button>
                         </CardHeader>
                         <CardContent className="space-y-6 pt-6">
-                            {renderRubriqueFields(actifFields, "bilan.actifs", removeActif, 3)}
+                            {renderRubriqueFields(actifFields, "bilan.actifs", removeActif, 1)}
                             <p className="font-bold text-green-600">Total Actifs : {totalActifs}</p>
                         </CardContent>
                     </Card>
@@ -215,7 +229,7 @@ export function FinancialDataForm({ form, companies, rubriqueTypes }: FinancialD
                             <CardTitle className="text-2xl text-blue-800">Passifs</CardTitle>
                             <Button
                                 type="button"
-                                onClick={() => appendPassif({ libelle: "", montant: 0, idTypeRubrique: 0 })}
+                                onClick={() => appendPassif({ idRubrique: 0, montant: 0, idTypeRubrique: 0 })}
                                 className="bg-blue-500 hover:bg-blue-600 text-white"
                             >
                                 <Plus className="h-5 w-5 mr-2" />
@@ -223,7 +237,7 @@ export function FinancialDataForm({ form, companies, rubriqueTypes }: FinancialD
                             </Button>
                         </CardHeader>
                         <CardContent className="space-y-6 pt-6">
-                            {renderRubriqueFields(passifFields, "bilan.passifs", removePassif, 4)}
+                            {renderRubriqueFields(passifFields, "bilan.passifs", removePassif, 2)}
                             <p className="font-bold text-blue-600">Total Passifs : {totalPassifs}</p>
                             {totalActifs !== totalPassifs && (
                                 <p className="text-red-500 font-bold">Erreur : Total Actifs et Passifs ne sont pas égaux.</p>
@@ -238,7 +252,7 @@ export function FinancialDataForm({ form, companies, rubriqueTypes }: FinancialD
                             <CardTitle className="text-2xl text-yellow-800">Produits</CardTitle>
                             <Button
                                 type="button"
-                                onClick={() => appendProduit({ libelle: "", montant: 0, idTypeRubrique: 0 })}
+                                onClick={() => appendProduit({ idRubrique: 0, montant: 0, idTypeRubrique: 0 })}
                                 className="bg-yellow-500 hover:bg-yellow-600 text-white"
                             >
                                 <Plus className="h-5 w-5 mr-2" />
@@ -246,7 +260,7 @@ export function FinancialDataForm({ form, companies, rubriqueTypes }: FinancialD
                             </Button>
                         </CardHeader>
                         <CardContent className="space-y-6 pt-6">
-                            {renderRubriqueFields(produitFields, "resultat.produits", removeProduit, 2)}
+                            {renderRubriqueFields(produitFields, "resultat.produits", removeProduit, 3)}
                             <p className="font-bold text-yellow-600">Total Produits : {totalProduits}</p>
                         </CardContent>
                     </Card>
@@ -256,7 +270,7 @@ export function FinancialDataForm({ form, companies, rubriqueTypes }: FinancialD
                             <CardTitle className="text-2xl text-red-800">Charges</CardTitle>
                             <Button
                                 type="button"
-                                onClick={() => appendCharge({ libelle: "", montant: 0, idTypeRubrique: 0 })}
+                                onClick={() => appendCharge({ idRubrique: 0, montant: 0, idTypeRubrique: 0 })}
                                 className="bg-red-500 hover:bg-red-600 text-white"
                             >
                                 <Plus className="h-5 w-5 mr-2" />
@@ -264,7 +278,7 @@ export function FinancialDataForm({ form, companies, rubriqueTypes }: FinancialD
                             </Button>
                         </CardHeader>
                         <CardContent className="space-y-6 pt-6">
-                            {renderRubriqueFields(chargeFields, "resultat.charges", removeCharge, 1)}
+                            {renderRubriqueFields(chargeFields, "resultat.charges", removeCharge, 3)}
                             <p className="font-bold text-red-600">Total Charges : {totalCharges}</p>
                         </CardContent>
                     </Card>

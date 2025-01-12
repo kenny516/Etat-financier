@@ -12,17 +12,20 @@ import { apiUrl, Societe, TypeRubrique } from "@/type/type";
 export default function SaisiePage() {
     const [companies, setCompanies] = useState<Societe[]>([]);
     const [rubriqueTypes, setRubriqueTypes] = useState<TypeRubrique[]>([]);
+    const [rubriques, setRubriques] = useState<Rubrique[]>([]);
 
     useEffect(() => {
         // Fetch companies and rubrique types
         const fetchData = async () => {
             try {
-                const [companiesResponse, typesResponse] = await Promise.all([
+                const [companiesResponse, typesResponse, rubriqueResponse] = await Promise.all([
                     axios.get(apiUrl + '/societes'),
-                    axios.get(apiUrl + '/types-rubrique')
+                    axios.get(apiUrl + '/types-rubrique'),
+                    axios.get(apiUrl + '/rubriques'),
                 ]);
                 setCompanies(companiesResponse.data);
                 setRubriqueTypes(typesResponse.data);
+                setRubriques(rubriqueResponse.data);
             } catch (error) {
                 console.error("Error fetching data:", error);
             }
@@ -75,7 +78,9 @@ export default function SaisiePage() {
             <h1 className="text-3xl font-bold mb-8 ml-6">Saisie des Données Financières</h1>
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-                    <FinancialDataForm form={form} companies={companies} rubriqueTypes={rubriqueTypes} />
+                    <FinancialDataForm form={form} companies={companies} rubriqueTypes={rubriqueTypes}
+                        rubriques={rubriques}
+                    />
                 </form>
             </Form>
         </div>
