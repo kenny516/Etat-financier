@@ -49,7 +49,7 @@ export function FinancialDataForm({ form, companies, rubriqueTypes }: FinancialD
             <div key={field.id} className="flex flex-col md:flex-row gap-4 items-start bg-gray-50 p-4 rounded-lg">
                 <FormField
                     control={form.control}
-                    name={`${name}.${index}.libelle` as any}
+                    name={`${name}.${index}.libelle`}
                     render={({ field }) => (
                         <FormItem className="flex-1">
                             <FormLabel>Libellé</FormLabel>
@@ -62,7 +62,7 @@ export function FinancialDataForm({ form, companies, rubriqueTypes }: FinancialD
                 />
                 <FormField
                     control={form.control}
-                    name={`${name}.${index}.montant` as any}
+                    name={`${name}.${index}.montant`}
                     render={({ field }) => (
                         <FormItem className="flex-1">
                             <FormLabel>Montant</FormLabel>
@@ -86,7 +86,7 @@ export function FinancialDataForm({ form, companies, rubriqueTypes }: FinancialD
                 />
                 <FormField
                     control={form.control}
-                    name={`${name}.${index}.idTypeRubrique` as any}
+                    name={`${name}.${index}.idTypeRubrique`}
                     render={({ field }) => (
                         <FormItem className="flex-1">
                             <FormLabel>Type</FormLabel>
