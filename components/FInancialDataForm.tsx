@@ -21,7 +21,7 @@ const formSchema = z.object({
     idPost: z.number(),
     idRubrique: z.number(),
     montant: z.number().min(0, "Le montant doit être positif"),
-    description: z.string().min(1, "La description est requise"),
+    description: z.string(),
     date: z.string().min(1, "La date est requise"),
 })
 
