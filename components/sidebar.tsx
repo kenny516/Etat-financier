@@ -31,6 +31,11 @@ const navigation = [
         href: "/analyses",
         icon: BarChart3
     },
+    {
+        name: "Insertion ecriture",
+        href: "/ecriture",
+        icon: BarChart3
+    },
 ];
 
 export function Sidebar() {
@@ -69,7 +74,7 @@ export function Sidebar() {
                         );
                     })}
                 </nav>
-               
+
             </div>
         </div>
     );

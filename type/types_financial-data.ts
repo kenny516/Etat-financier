@@ -4,6 +4,7 @@ export const rubriqueSchema = z.object({
     idRubrique: z.number(),
     montant: z.number().min(0, "Le montant doit être positif"),
     idTypeRubrique: z.number(),
+    description: z.string()
 });
 
 export type Rubrique = z.infer<typeof rubriqueSchema>;
