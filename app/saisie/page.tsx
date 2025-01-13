@@ -4,10 +4,11 @@ import { useState, useEffect } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Form } from "@/components/ui/form";
-import { FinancialDataForm } from "@/components/financial-data-form";
+
 import { financialSchema, FinancialFormData } from "@/type/types_financial-data";
 import axios from "axios";
-import { apiUrl, Societe, TypeRubrique } from "@/type/type";
+import { apiUrl, Rubrique, Societe, TypeRubrique } from "@/type/type";
+import { FinancialDataForm } from "@/components/financial-data-form";
 
 export default function SaisiePage() {
     const [companies, setCompanies] = useState<Societe[]>([]);

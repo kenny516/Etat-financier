@@ -211,7 +211,7 @@ export function FinancialDataForm({ form, companies, rubriqueTypes, rubriques }:
                             <CardTitle className="text-2xl text-green-800">Actifs</CardTitle>
                             <Button
                                 type="button"
-                                onClick={() => appendActif({ idRubrique: 0, montant: 0, idTypeRubrique: 0 })}
+                                onClick={() => appendActif({ idRubrique: 0, montant: 0, description: "", idTypeRubrique: 0 })}
                                 className="bg-green-500 hover:bg-green-600 text-white"
                             >
                                 <Plus className="h-5 w-5 mr-2" />
@@ -229,7 +229,7 @@ export function FinancialDataForm({ form, companies, rubriqueTypes, rubriques }:
                             <CardTitle className="text-2xl text-blue-800">Passifs</CardTitle>
                             <Button
                                 type="button"
-                                onClick={() => appendPassif({ idRubrique: 0, montant: 0, idTypeRubrique: 0 })}
+                                onClick={() => appendPassif({ idRubrique: 0, montant: 0, description: "", idTypeRubrique: 0 })}
                                 className="bg-blue-500 hover:bg-blue-600 text-white"
                             >
                                 <Plus className="h-5 w-5 mr-2" />
@@ -252,7 +252,7 @@ export function FinancialDataForm({ form, companies, rubriqueTypes, rubriques }:
                             <CardTitle className="text-2xl text-yellow-800">Produits</CardTitle>
                             <Button
                                 type="button"
-                                onClick={() => appendProduit({ idRubrique: 0, montant: 0, idTypeRubrique: 0 })}
+                                onClick={() => appendProduit({ idRubrique: 0, montant: 0, description: "", idTypeRubrique: 0 })}
                                 className="bg-yellow-500 hover:bg-yellow-600 text-white"
                             >
                                 <Plus className="h-5 w-5 mr-2" />
@@ -270,7 +270,7 @@ export function FinancialDataForm({ form, companies, rubriqueTypes, rubriques }:
                             <CardTitle className="text-2xl text-red-800">Charges</CardTitle>
                             <Button
                                 type="button"
-                                onClick={() => appendCharge({ idRubrique: 0, montant: 0, idTypeRubrique: 0 })}
+                                onClick={() => appendCharge({ idRubrique: 0, montant: 0, description: "", idTypeRubrique: 0 })}
                                 className="bg-red-500 hover:bg-red-600 text-white"
                             >
                                 <Plus className="h-5 w-5 mr-2" />
