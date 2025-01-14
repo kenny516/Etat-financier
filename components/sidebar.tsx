@@ -6,7 +6,6 @@ import { cn } from "@/lib/utils";
 import {
     LayoutDashboard,
     FileSpreadsheet,
-    PlusCircle,
     BarChart3
 } from "lucide-react";
 
@@ -15,11 +14,6 @@ const navigation = [
         name: "Tableau de bord",
         href: "/",
         icon: LayoutDashboard
-    },
-    {
-        name: "Saisie",
-        href: "/saisie",
-        icon: PlusCircle
     },
     {
         name: "Bilans",
